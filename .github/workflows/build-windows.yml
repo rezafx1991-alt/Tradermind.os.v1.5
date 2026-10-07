@@ -1,0 +1,67 @@
+name: Build Windows Installer (setup.exe)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'artifacts/tradermind/**'
+      - '.github/workflows/build-windows.yml'
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Get pnpm store path
+        id: pnpm-cache
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Electron & electron-builder (CI only)
+        working-directory: artifacts/tradermind
+        run: pnpm add -D electron@^39.0.0 electron-builder@^26.0.0
+
+      - name: Cache Electron binaries
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.LOCALAPPDATA }}\electron\Cache
+          key: ${{ runner.os }}-electron-${{ hashFiles('artifacts/tradermind/package.json') }}
+
+      - name: Build Windows installer
+        working-directory: artifacts/tradermind
+        run: pnpm run electron:build:win
+        env:
+          # electron-builder می‌تواند از این برای publish در GitHub Releases استفاده کند
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload setup.exe artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TraderMind-Windows-Installer-v${{ github.sha }}
+          path: artifacts/tradermind/dist-electron/TraderMind-Setup-*.exe
+          retention-days: 30
+          if-no-files-found: error
