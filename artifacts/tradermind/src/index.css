@@ -1,0 +1,422 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover-border: hsl(var(--popover-border));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-border: var(--primary-border);
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-secondary-border: var(--secondary-border);
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted-border: var(--muted-border);
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent-border: var(--accent-border);
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-destructive-border: var(--destructive-border);
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-primary-border: var(--sidebar-primary-border);
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-accent-border: var(--sidebar-accent-border);
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --background: 226 21% 95%; 
+  --foreground: 226 21% 10%;
+  --border: 226 15% 85%;
+  --card: 222 20% 100%;
+  --card-foreground: 226 21% 10%;
+  --card-border: 226 15% 85%;
+  --sidebar: 224 20% 98%;
+  --sidebar-foreground: 226 21% 10%;
+  --sidebar-border: 226 15% 85%;
+  --sidebar-primary: 217 91% 60%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 217 15% 90%;
+  --sidebar-accent-foreground: 226 21% 10%;
+  --sidebar-ring: 217 91% 60%;
+  --popover: 222 20% 100%;
+  --popover-foreground: 226 21% 10%;
+  --popover-border: 226 15% 85%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 217 15% 90%;
+  --secondary-foreground: 226 21% 10%;
+  --muted: 215 16% 90%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 217 15% 90%;
+  --accent-foreground: 226 21% 10%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 226 15% 85%;
+  --ring: 217 91% 60%;
+  --chart-1: 217 91% 60%;
+  --chart-2: 142 71% 45%;
+  --chart-3: 0 84% 60%;
+  --chart-4: 215 16% 47%;
+  --chart-5: 38 92% 50%;
+
+  --app-font-sans: 'Vazirmatn', 'Inter', sans-serif;
+  --app-font-serif: Georgia, serif;
+  --app-font-mono: Menlo, monospace;
+  --radius: 0.75rem; 
+}
+
+.dark {
+  --background: 226 21% 7%;
+  --foreground: 215 20% 90%;
+  --border: 222 20% 15%;
+  --card: 222 28% 12%;
+  --card-foreground: 215 20% 90%;
+  --card-border: 222 20% 15%;
+  --sidebar: 224 30% 7%;
+  --sidebar-foreground: 215 20% 90%;
+  --sidebar-border: 222 20% 15%;
+  --sidebar-primary: 217 91% 60%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 222 20% 15%;
+  --sidebar-accent-foreground: 215 20% 90%;
+  --sidebar-ring: 217 91% 60%;
+  --popover: 222 28% 12%;
+  --popover-foreground: 215 20% 90%;
+  --popover-border: 222 20% 15%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 222 20% 15%;
+  --secondary-foreground: 215 20% 90%;
+  --muted: 222 20% 15%;
+  /* Keep secondary text readable on dark cards and sidebars. */
+  --muted-foreground: 215 22% 72%;
+  --accent: 222 20% 15%;
+  --accent-foreground: 215 20% 90%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 222 20% 18%;
+  --ring: 217 91% 60%;
+  --chart-1: 217 91% 60%;
+  --chart-2: 142 71% 45%;
+  --chart-3: 0 84% 60%;
+  --chart-4: 215 16% 60%;
+  --chart-5: 38 92% 50%;
+}
+
+/* ──── اندازه متن ──── */
+:root { font-size: 16px; }
+[data-font-size="xs"] { font-size: 13px; }
+[data-font-size="sm"] { font-size: 14px; }
+[data-font-size="md"] { font-size: 16px; }
+[data-font-size="lg"] { font-size: 18px; }
+[data-font-size="xl"] { font-size: 20px; }
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+    /* جلوگیری از انتخاب اتفاقی متن روی موبایل در عناصر تعاملی */
+    -webkit-tap-highlight-color: transparent;
+  }
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    /* جلوگیری از over-scroll در iOS */
+    overscroll-behavior: none;
+    overflow-x: hidden;
+  }
+
+  /* Android WebView can briefly retain a translated fixed drawer's overflow. */
+  html:has(.tradermind-mobile-drawer[data-open="true"]),
+  body:has(.tradermind-mobile-drawer[data-open="true"]) {
+    overflow-x: hidden;
+  }
+
+  /*
+   * The drawer uses an explicit physical right edge because Android WebView
+   * can combine RTL direction and translate-x utilities incorrectly. Keep
+   * the mobile animation here, and force the desktop sidebar open separately
+   * so the mobile store state can never hide the desktop navigation.
+   */
+  .tradermind-mobile-drawer {
+    transform: translate3d(100%, 0, 0);
+    visibility: hidden;
+    transition: transform 300ms ease-in-out, visibility 300ms ease-in-out;
+    will-change: transform;
+    contain: layout paint;
+  }
+  .tradermind-mobile-drawer[data-open="true"] {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+  @media (min-width: 768px) {
+    .tradermind-mobile-drawer,
+    .tradermind-mobile-drawer[data-open="true"] {
+      transform: translate3d(0, 0, 0);
+      visibility: visible;
+      transition: none;
+    }
+  }
+
+  /* ── Scrollbar سفارشی — فقط دسکتاپ */
+  @media (min-width: 768px) {
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.5); }
+  }
+}
+
+/* TraderMind motion-film canvas */
+.video-root {
+  --ink: #10191e;
+  --ink-deep: #0c1418;
+  --paper: #f5ead8;
+  --paper-dim: #c6bba9;
+  --copper: #d7a55b;
+  --coral: #df6d55;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: radial-gradient(circle at 70% 15%, #26373b 0%, var(--ink) 39%, var(--ink-deep) 100%);
+  color: var(--paper);
+  font-family: 'Space Grotesk', sans-serif;
+  isolation: isolate;
+}
+.video-noise { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; z-index: 10; opacity: .07; mix-blend-mode: screen; }
+.video-root::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .12; background: linear-gradient(90deg, transparent 0 49.8%, #d7a55b 50%, transparent 50.2%), linear-gradient(0deg, transparent 0 49.8%, #d7a55b 50%, transparent 50.2%); background-size: 18vw 18vw; mask-image: radial-gradient(circle at 60% 40%, black, transparent 72%); }
+.brand-stamp { position: absolute; z-index: 20; top: 4.2vh; right: 4.5vw; display: flex; align-items: center; gap: .7vw; direction: ltr; font-family: 'DM Mono', monospace; letter-spacing: .12em; font-size: clamp(9px, .8vw, 15px); color: var(--paper-dim); }
+.brand-stamp span { display: grid; place-items: center; width: 2.3vw; height: 2.3vw; min-width: 28px; min-height: 28px; border: 1px solid var(--copper); color: var(--copper); font-weight: 500; font-size: clamp(10px, 1vw, 18px); }
+.persistent-arc { position: absolute; z-index: 0; width: 52vw; height: 52vw; border: 1px solid rgba(215,165,91,.32); border-radius: 50%; left: -26vw; top: 20vh; box-shadow: 0 0 0 4vw rgba(215,165,91,.035), 0 0 0 9vw rgba(215,165,91,.025); transform-origin: 50% 50%; }
+.scene { position: absolute; z-index: 2; inset: 0; padding: 14vh 8vw 9vh; }
+.scene-label, .eyebrow { font-family: 'DM Mono', monospace; color: var(--copper); font-size: clamp(9px, .85vw, 15px); letter-spacing: .17em; direction: ltr; }
+.scene h1, .scene h2 { margin: 0; color: var(--paper); font-weight: 500; letter-spacing: -.07em; line-height: .9; }
+.scene h1 { font-size: clamp(68px, 10.5vw, 190px); }
+.scene h2 { font-size: clamp(48px, 7vw, 125px); }
+.scene em { color: var(--coral); font-style: normal; }
+.lede, .scene p { color: var(--paper-dim); font-size: clamp(13px, 1.3vw, 24px); line-height: 1.7; }
+.scene-one { display: flex; align-items: center; justify-content: space-between; direction: ltr; }
+.scene-copy { direction: ltr; margin-top: -4vh; }
+.scene-copy .eyebrow { margin-bottom: 3vh; }
+.scene-copy .lede { margin-top: 3.5vh; }
+.hero-orbit { position: relative; width: 38vw; height: 38vw; max-width: 570px; max-height: 570px; display: grid; place-items: center; }
+.orbit { position: absolute; border: 1px solid rgba(215,165,91,.48); border-radius: 50%; animation: orbitSpin 18s linear infinite; }
+.orbit-a { inset: 10%; transform: rotate(-24deg) scaleY(.42); }
+.orbit-b { inset: 0; transform: rotate(58deg) scaleY(.27); animation-duration: 24s; animation-direction: reverse; }
+.hero-node { width: 10vw; height: 10vw; min-width: 125px; min-height: 125px; border-radius: 50%; background: var(--coral); color: var(--ink); display: grid; place-items: center; font-size: clamp(30px, 4vw, 70px); font-weight: 700; letter-spacing: -.08em; box-shadow: 2vw 2vw 0 rgba(215,165,91,.18); animation: nodePulse 4s ease-in-out infinite; }
+.hero-node span { font-family: 'DM Mono', monospace; font-size: .2em; letter-spacing: .15em; margin-top: -2.8em; margin-left: 6em; }
+.orbit-dot { position: absolute; width: 1vw; height: 1vw; min-width: 9px; min-height: 9px; background: var(--copper); border-radius: 50%; }
+.dot-a { top: 9%; right: 17%; }.dot-b { bottom: 19%; left: 9%; background: var(--coral); }
+.hero-footer, .loop-line { position: absolute; bottom: 5vh; left: 8vw; font-family: 'DM Mono', monospace; color: var(--paper-dim); font-size: clamp(9px, .75vw, 14px); letter-spacing: .15em; direction: ltr; }
+.scene-two { padding: 12vh 7vw 8vh; }
+.dashboard-frame { display: flex; direction: ltr; height: 68vh; max-height: 760px; margin-top: 4vh; border: 1px solid rgba(215,165,91,.42); background: #152228; box-shadow: 1.5vw 1.5vw 0 rgba(223,109,85,.13); overflow: hidden; }
+.ui-sidebar { width: 22%; padding: 4vh 2vw; border-right: 1px solid rgba(245,234,216,.11); font-family: 'DM Mono', monospace; }
+.ui-brand { color: var(--paper); font-size: clamp(10px, 1vw, 17px); margin-bottom: 9vh; }.ui-brand b { color: var(--coral); }
+.ui-nav { color: #758486; font-size: clamp(9px, .85vw, 14px); padding: 1.7vh .7vw; display: flex; gap: .8vw; align-items: center; }.ui-nav span { color: var(--copper); }.ui-nav.active { background: rgba(215,165,91,.13); color: var(--paper); border-left: 2px solid var(--coral); }
+.ui-main { flex: 1; padding: 5vh 3vw; direction: rtl; }.ui-top { display: flex; justify-content: space-between; align-items: center; font-size: clamp(15px, 1.4vw, 25px); color: var(--paper); }.ui-top i { color: #758486; font: normal clamp(8px, .7vw, 12px) 'DM Mono'; direction: ltr; }
+.ui-cards { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 1vw; margin-top: 5vh; direction: ltr; }.ui-card { min-height: 24vh; background: #1d2b31; border: 1px solid rgba(245,234,216,.1); padding: 2.3vh 1.5vw; direction: rtl; }.ui-card small, .line-chart small { color: #859293; font-size: clamp(9px, .8vw, 14px); }.ui-card strong { display: block; color: var(--paper); font-size: clamp(22px, 2.2vw, 42px); margin-top: 2.8vh; }.ui-card p { color: #859293; font-size: clamp(9px, .8vw, 14px); }.ui-card .amber { color: var(--copper); font-size: clamp(16px, 1.5vw, 27px); }.mini-chart { height: 7vh; display: flex; gap: .45vw; align-items: end; margin-top: 3vh; direction: ltr; }.mini-chart span { flex: 1; background: var(--coral); opacity: .8; }
+.ui-bottom { display: flex; align-items: end; justify-content: space-between; margin-top: 6vh; }.line-chart { width: 70%; }.line-chart svg { width: 100%; height: 15vh; overflow: visible; }.sync-chip { color: var(--copper); font: clamp(9px, .8vw, 14px) 'DM Mono'; }.sync-chip span { display: inline-block; width: .5vw; height: .5vw; background: #9fc98b; border-radius: 50%; margin-left: .5vw; }
+.scene-caption { position: absolute; bottom: 5vh; left: 7vw; direction: ltr; color: var(--paper-dim); font: clamp(9px, .8vw, 14px) 'DM Mono'; letter-spacing: .1em; }
+.scene-three { display: flex; direction: ltr; align-items: center; justify-content: space-between; padding-left: 11vw; }.journal-copy { direction: ltr; width: 40%; }.journal-copy .scene-label { margin-bottom: 4vh; }.journal-copy p { margin-top: 4vh; }.progress-mark { color: var(--copper); font: clamp(9px, .8vw, 14px) 'DM Mono'; margin-top: 12vh; }.progress-mark span { display: inline-block; width: 4vw; height: 1px; background: var(--copper); vertical-align: middle; margin-right: 1vw; }
+.journal-paper { width: 37vw; min-width: 380px; max-width: 610px; padding: 4vh 3vw; color: var(--ink); background: var(--paper); box-shadow: 1.7vw 1.7vw 0 rgba(215,165,91,.2); transform: rotate(2deg); direction: rtl; }.paper-top { display: flex; justify-content: space-between; border-bottom: 1px solid #c7bbaa; padding-bottom: 2vh; font-size: clamp(12px, 1vw, 18px); }.paper-top span, .paper-field label { font: clamp(8px, .7vw, 12px) 'DM Mono'; color: #7b766d; }.paper-field { position: relative; margin-top: 3vh; border-bottom: 1px solid #c7bbaa; padding-bottom: 1.5vh; }.paper-field label { display: block; margin-bottom: 1vh; }.paper-field strong { font-size: clamp(14px, 1.3vw, 23px); font-weight: 500; }.paper-field i { position: absolute; left: 0; top: 2vh; color: var(--coral); }.paper-row { display: flex; gap: 2vw; }.paper-row .paper-field { flex: 1; }.note { min-height: 10vh; }.scribble { margin-top: 2vh; height: 2px; width: 85%; background: var(--coral); transform-origin: right; }.paper-tags { display: flex; gap: .5vw; margin-top: 3vh; direction: ltr; }.paper-tags span { border: 1px solid #baad9a; padding: .5vh .6vw; font: clamp(8px, .7vw, 12px) 'DM Mono'; color: #716a5f; }.paper-footer { display: flex; justify-content: space-between; margin-top: 5vh; font: clamp(8px, .7vw, 12px) 'DM Mono'; color: #716a5f; }.paper-footer span { color: #69836a; }
+.scene-four { padding: 12vh 9vw; }.analysis-grid { position: absolute; inset: 0; z-index: -1; opacity: .2; background: linear-gradient(rgba(215,165,91,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(215,165,91,.18) 1px, transparent 1px); background-size: 6vw 6vw; transform: perspective(500px) rotateX(55deg) scale(1.5); transform-origin: bottom; animation: gridDrift 12s linear infinite; }.analysis-copy { position: absolute; top: 19vh; left: 10vw; direction: ltr; }.analysis-copy p { margin-top: 4vh; }.analysis-orb { position: absolute; top: 15vh; right: 24vw; width: 25vw; }.analysis-orb svg { width: 100%; animation: orbFloat 5s ease-in-out infinite; }.orb-legend { display: flex; justify-content: center; gap: .8vw; font: clamp(8px, .7vw, 12px) 'DM Mono'; direction: ltr; color: var(--paper-dim); }.orb-legend span { width: .6vw; height: .6vw; background: var(--copper); border-radius: 50%; }.orb-legend span:nth-of-type(2) { background: var(--coral); }.insight-stack { position: absolute; bottom: 10vh; right: 9vw; display: flex; gap: 1vw; direction: ltr; }.insight-stack > div { min-width: 13vw; padding: 2vh 1.2vw; border-top: 2px solid var(--copper); background: rgba(29,43,49,.72); }.insight-stack small, .insight-stack b, .insight-stack strong { display: block; }.insight-stack small { color: #859293; font: clamp(8px, .7vw, 12px) 'DM Mono'; }.insight-stack b { color: var(--paper); font-size: clamp(11px, 1vw, 17px); margin: 1.5vh 0; }.insight-stack strong { color: var(--coral); font: clamp(11px, 1vw, 17px) 'DM Mono'; }
+.scene-five { display: flex; flex-direction: column; align-items: flex-start; padding-left: 12vw; padding-top: 19vh; direction: ltr; }.closing-ring { position: absolute; width: 39vw; height: 39vw; border: 1px solid rgba(215,165,91,.45); border-radius: 50%; right: -9vw; top: 7vh; box-shadow: 0 0 0 4vw rgba(215,165,91,.04); animation: ringPulse 6s ease-in-out infinite; }.closing-copy { margin-top: 4vh; }.closing-copy p { margin-top: 3vh; }.platforms { display: flex; gap: 3vw; margin-top: 9vh; }.platforms > div { border-left: 1px solid var(--copper); padding-left: 1vw; }.platforms b, .platforms span { display: block; }.platforms b { font: clamp(10px, .8vw, 14px) 'DM Mono'; color: var(--copper); letter-spacing: .12em; }.platforms span { color: var(--paper-dim); font-size: clamp(10px, .9vw, 15px); margin-top: 1vh; }.closing-lockup { display: flex; align-items: center; gap: 1vw; margin-top: 10vh; }.tm-mark { width: 3.2vw; height: 3.2vw; min-width: 42px; min-height: 42px; display: grid; place-items: center; background: var(--coral); color: var(--ink); font-size: clamp(16px, 1.5vw, 26px); font-weight: 700; }.closing-lockup b, .closing-lockup span { display: block; }.closing-lockup b { font-size: clamp(16px, 1.6vw, 28px); }.closing-lockup span { font: clamp(8px, .7vw, 12px) 'DM Mono'; color: var(--copper); letter-spacing: .16em; margin-top: .5vh; }.loop-line { left: auto; right: 8vw; }
+@keyframes orbitSpin { to { transform: rotate(336deg) scaleY(.42); } } @keyframes nodePulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.035); } } @keyframes gridDrift { to { background-position: 6vw 6vw; } } @keyframes orbFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-1vh); } } @keyframes ringPulse { 0%,100% { transform: scale(1); opacity: .8; } 50% { transform: scale(1.04); opacity: .5; } }
+
+/* ── Touch-Friendly: حداقل اندازه لمس ۴۴px برای iOS HIG ── */
+@layer utilities {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Safe area برای notch و Dynamic Island */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  /* Scroll snap برای کارت‌های موبایل */
+  .snap-x-mandatory {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .snap-start { scroll-snap-align: start; }
+
+  /* انیمیشن ورود صفحه */
+  .page-enter {
+    animation: pageEnter 0.3s ease-out;
+  }
+  @keyframes pageEnter {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* انیمیشن لرزش PIN اشتباه */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    15%       { transform: translateX(-8px); }
+    30%       { transform: translateX(8px); }
+    45%       { transform: translateX(-6px); }
+    60%       { transform: translateX(6px); }
+    75%       { transform: translateX(-3px); }
+    90%       { transform: translateX(3px); }
+  }
+
+  /* کارت‌های لمس‌پذیر */
+  .card-pressable {
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .card-pressable:active {
+    transform: scale(0.98);
+  }
+}
+
+/* ── حذف Autofill زرد در Chrome/Safari ── */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 30px hsl(var(--input)) inset !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ── بهینه‌سازی تایپ‌اوگرافی موبایل ── */
+@media (max-width: 767px) {
+  h1 { font-size: 1.5rem !important; }
+  h2 { font-size: 1.25rem !important; }
+}
+
+/* ── جلوگیری از zoom روی input در iOS ── */
+@media (max-width: 767px) {
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: max(16px, 1em);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+}
+
+/* ── لایهٔ بصری اصلی TraderMind ───────────────────────────────────────────── */
+.tradermind-page-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.tradermind-page-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 22rem;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 86% 0%, hsl(var(--primary) / 0.12), transparent 34%),
+    radial-gradient(circle at 14% 10%, hsl(var(--chart-2) / 0.06), transparent 28%);
+  mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+.tradermind-card {
+  border-color: hsl(var(--card-border) / 0.9);
+  box-shadow: 0 10px 30px hsl(222 40% 3% / 0.08);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.tradermind-card:hover {
+  border-color: hsl(var(--primary) / 0.28);
+  box-shadow: 0 14px 34px hsl(222 40% 3% / 0.12);
+}
+
+.dark .tradermind-card {
+  background-image: linear-gradient(145deg, hsl(var(--card) / 0.98), hsl(222 30% 9% / 0.96));
+  box-shadow: 0 14px 34px hsl(222 45% 2% / 0.24);
+}
+
+button,
+input,
+textarea,
+[role="button"] {
+  touch-action: manipulation;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid hsl(var(--ring) / 0.7);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="#0f172a"/>
+  <!-- Chart area glow -->
+  <defs>
+    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="1"/>
+    </linearGradient>
+    <linearGradient id="fillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Fill area under chart -->
+  <path d="M72 370 L168 250 L256 298 L336 178 L440 108 L440 420 L72 420 Z" fill="url(#fillGrad)"/>
+  <!-- Chart line -->
+  <polyline
+    points="72,370 168,250 256,298 336,178 440,108"
+    stroke="url(#lineGrad)"
+    stroke-width="22"
+    fill="none"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <!-- Dots -->
+  <circle cx="72" cy="370" r="14" fill="#1e40af"/>
+  <circle cx="168" cy="250" r="14" fill="#2563eb"/>
+  <circle cx="256" cy="298" r="14" fill="#2563eb"/>
+  <circle cx="336" cy="178" r="14" fill="#3b82f6"/>
+  <circle cx="440" cy="108" r="18" fill="#3b82f6"/>
+  <!-- Glow on last dot -->
+  <circle cx="440" cy="108" r="30" fill="#3b82f6" opacity="0.2"/>
+  <!-- TM text at bottom right corner in small size -->
+  <text x="440" y="460" font-family="system-ui, sans-serif" font-size="52" font-weight="700" fill="#3b82f6" text-anchor="end" opacity="0.7">TM</text>
+</svg>

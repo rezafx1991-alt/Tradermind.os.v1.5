@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "TraderMind — ژورنال معامله‌گر"
+version = "1.0.0"
+id = "artifacts/tradermind"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23583
+
+[services.development]
+run = "pnpm --filter @workspace/tradermind run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/tradermind", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/tradermind/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23583"
+BASE_PATH = "/"

@@ -1,0 +1,1 @@
+export { useVideoPlayer } from './hooks';

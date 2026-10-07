@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>TraderMind — ژورنال معامله‌گر</title>
+    <meta name="description" content="TraderMind — ابزار حرفه‌ای برای ثبت معاملات، تحلیل استراتژی، و ژورنال روزانه معامله‌گر" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- PWA meta tags -->
+    <meta name="application-name" content="تریدرمایند" />
+    <meta name="apple-mobile-web-app-title" content="تریدرمایند" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="msapplication-TileColor" content="#0f172a" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Content Security Policy — prevents XSS and unwanted script execution -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self';" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="TraderMind" />
+    <meta property="og:description" content="ابزار حرفه‌ای برای معامله‌گران" />
+    <meta property="og:type" content="website" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icons/icon.svg" />
+
+    <!-- فونت وزیرمتن برای پشتیبانی کامل از فارسی -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
