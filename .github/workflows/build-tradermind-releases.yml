@@ -1,130 +1,154 @@
-name: Build TraderMind releases
+rezasoleimanipd1991-bot
+Tradingmind-for-android-and-pc
+Repository navigation
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security and quality
+Insights
+Settings
+Files
+Go to file
+t
+T
+.github/workflows
+build-android.yml
+build-windows.yml
+artifacts
+attached_assets
+lib
+scripts
+.gitignore
+.npmrc
+.replit
+.replitignore
+package.json
+pnpm-lock.yaml
+pnpm-workspace.yaml
+replit.md
+tsconfig.base.json
+tsconfig.json
+Tradingmind-for-android-and-pc/.github/workflows
+/build-android.yml
+rezasoleimanipd1991-bot
+rezasoleimanipd1991-bot
+ci: add GitHub Actions workflows for Windows and Android builds
+c8c7409
+ · 
+2 months ago
+
+Code
+
+Blame
+89 lines (72 loc) · 2.56 KB
+Explain
+name: Build Android APK
 
 on:
-  workflow_dispatch:
   push:
-    tags:
-      - "v*"
-
-permissions:
-  contents: write
+    branches: [main]
+    paths:
+      - 'artifacts/tradermind/**'
+      - '.github/workflows/build-android.yml'
+  workflow_dispatch:
 
 jobs:
-  windows:
-    name: Windows installer
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.26.1
-
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile=false
-
-      - name: Build Windows installer
-        run: pnpm --filter @workspace/tradermind run electron:build:win
-
-      - name: Upload Windows installer
-        uses: actions/upload-artifact@v4
-        with:
-          name: tradermind-windows
-          path: artifacts/tradermind/dist-electron/*.exe
-          if-no-files-found: error
-
-  android:
-    name: Android APK
+  build-android:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.26.1
-
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-
-      - name: Install Java
-        uses: actions/setup-java@v5
+      - name: Setup Java 17 (required for Gradle)
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 21
+          java-version: '17'
 
-      - name: Set up Android SDK
+      - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
         with:
-          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
+          node-version: '20'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile=false
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
-      - name: Build web assets
+      - name: Get pnpm store path
+        id: pnpm-cache
+        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web assets for Capacitor
         working-directory: artifacts/tradermind
         run: pnpm run android:build:vite
 
-      - name: Generate and sync Capacitor Android project
+      - name: Add Android platform (Capacitor init)
         working-directory: artifacts/tradermind
-        shell: bash
-        run: |
-          if [ ! -d android ]; then
-            pnpm exec cap add android
-          fi
-          pnpm exec cap sync android
+        run: npx cap add android
 
-      - name: Apply Android keyboard compatibility patch
+      - name: Sync Capacitor (copy web assets to Android project)
         working-directory: artifacts/tradermind
-        run: python scripts/patch-android-native.py
+        run: npx cap sync android
 
-      - name: Build installable APK
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('artifacts/tradermind/android/**/*.gradle*', 'artifacts/tradermind/android/**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Make gradlew executable
+        working-directory: artifacts/tradermind/android
+        run: chmod +x gradlew
+
+      - name: Build debug APK
         working-directory: artifacts/tradermind/android
         run: ./gradlew assembleDebug
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
 
-      - name: Rename APK
-        shell: bash
-        run: |
-          mkdir -p artifacts/tradermind/release-assets
-          cp artifacts/tradermind/android/app/build/outputs/apk/debug/app-debug.apk \
-            "artifacts/tradermind/release-assets/TraderMind-${GITHUB_REF_NAME}-android.apk"
-
-      - name: Upload Android APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: tradermind-android
-          path: artifacts/tradermind/release-assets/*.apk
+          name: TraderMind-Android-APK-v${{ github.sha }}
+          path: artifacts/tradermind/android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
           if-no-files-found: error
+‎name‎
+17 ReferencesSearch
 
-  release:
-    name: Publish GitHub release
-    needs: [windows, android]
-    runs-on: ubuntu-latest
+‎In this file‎
+name: Build Android APK
+      - name: Checkout repository
+      - name: Setup Java 17 (required for Gradle)
+      - name: Setup Android SDK
+      - name: Setup Node.js 20
+      - name: Setup pnpm
+      - name: Get pnpm store path
+      - name: Cache pnpm store
+      - name: Install workspace dependencies
+      - name: Build web assets for Capacitor
 
-    steps:
-      - name: Download release files
-        uses: actions/download-artifact@v4
-        with:
-          pattern: tradermind-*
-          merge-multiple: true
-          path: release-assets
-
-      - name: Create or update GitHub release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          generate_release_notes: true
-          files: release-assets/*
+While the code is focused, press Alt+F1 for a menu of operations.
+Optimize
+Continue...
