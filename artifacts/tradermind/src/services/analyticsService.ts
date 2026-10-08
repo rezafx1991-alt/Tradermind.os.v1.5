@@ -3,7 +3,8 @@
  * تمام توابع pure هستند و قابل Unit Test.
  */
 import { Trade, DailyJournal, Strategy } from '../db/database';
-import { isWin, isLoss, isClosed, toDateStr, getNetPnl } from '../lib/tradeHelpers';
+import { isWin, isLoss, isClosed, isBreakEven, toDateStr, getNetPnl, getCloseTime, getResolvedR } from '../lib/tradeHelpers';
+import { computeTotalPnl } from '../core/metrics/pnl';
 import {
   getTradingDateParts,
   getTradingDayStart,
@@ -144,13 +145,14 @@ function calcWinRate(trades: Trade[]): number {
 }
 
 function calcAvgR(trades: Trade[]): number | null {
-  const withR = trades.filter(t => t.rMultiple != null);
-  if (withR.length === 0) return null;
-  return withR.reduce((s, t) => s + (t.rMultiple || 0), 0) / withR.length;
+  const values = trades
+    .map(getResolvedR)
+    .filter((value): value is number => value !== null && Number.isFinite(value));
+  return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
 }
 
 function calcTotalPnl(trades: Trade[]): number {
-  return trades.reduce((s, t) => s + (getNetPnl(t) ?? 0), 0);
+  return computeTotalPnl(trades);
 }
 
 function parseEmotions(json: string): string[] {
@@ -213,14 +215,17 @@ export function computeAnalytics(
 ): AnalyticsData {
   const strategyMap = new Map<string, string>(strategies.map(s => [s.id, s.name]));
   const closed = trades.filter(isClosed);
-  const pnlValues = closed.map(t => getNetPnl(t) ?? 0);
+  const closedWithPnl = closed
+    .map(trade => ({ trade, net: getNetPnl(trade) }))
+    .filter((item): item is { trade: Trade; net: number } => item.net !== null);
+  const pnlValues = closedWithPnl.map(item => item.net);
 
   // ---- Summary ----
   const summary: TradeSummary = {
     total: trades.length,
     wins: closed.filter(isWin).length,
     losses: closed.filter(isLoss).length,
-    breakeven: closed.filter(t => t.result === 'breakeven').length,
+    breakeven: closed.filter(isBreakEven).length,
     open: trades.filter(t => t.status === 'open').length,
     winRate: calcWinRate(trades),
     totalPnl: calcTotalPnl(trades),
@@ -234,12 +239,11 @@ export function computeAnalytics(
   };
 
   // ---- P/L Curve ----
-  const chrono = [...closed].sort((a, b) => (a.closedAt || a.openedAt) - (b.closedAt || b.openedAt));
+  const chrono = [...closedWithPnl].sort((a, b) => getCloseTime(a.trade) - getCloseTime(b.trade));
   let cum = 0;
-  const pnlCurve: PnlPoint[] = chrono.map((t, i) => {
-    const pnl = getNetPnl(t) ?? 0;
+  const pnlCurve: PnlPoint[] = chrono.map(({ trade, net: pnl }, i) => {
     cum += pnl;
-    return { index: i + 1, symbol: t.symbol, pnl: +pnl.toFixed(2), cumulative: +cum.toFixed(2) };
+    return { index: i + 1, symbol: trade.symbol, pnl: +pnl.toFixed(2), cumulative: +cum.toFixed(2) };
   });
 
   // ---- Strategy Performance ----

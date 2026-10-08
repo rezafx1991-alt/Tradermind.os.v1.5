@@ -133,6 +133,24 @@ describe('جریان کامل سشن', () => {
     })).rejects.toThrow();
   });
 
+  it.each(['skipped', 'invalid'] as const)(
+    'تریگر با وضعیت %s به معامله تبدیل نمی‌شود',
+    async status => {
+      const { session, tf } = await seed();
+      const trigger = await journalSessionService.createTriggerEvent({
+        sessionId: session.id,
+        timeframeOptionId: tf('1M'),
+        status,
+      });
+
+      await expect(journalSessionService.createTradeFromSession({
+        sessionId: session.id,
+        triggerEventId: trigger.id,
+      })).rejects.toThrow(/تریگر/);
+      expect(await db.trades.count()).toBe(0);
+    },
+  );
+
   it('رسانهٔ تحلیل و تریگر به موجودیت درست وصل می‌شود', async () => {
     const { session, tf } = await seed();
     const [a] = await journalSessionService.createAnalysisEvents([{ sessionId: session.id, timeframeOptionId: tf('4H'), analysisText: 'x' }]);

@@ -269,6 +269,40 @@ describe('journalSessionService', () => {
     expect(await db.journalSessionEvents.count()).toBe(0);
   });
 
+  it('deleting an analysis clears its media and links but preserves its trade and trigger', async () => {
+    const { session } = await seedSession();
+    const timeframe = (await journalSessionService.getOptions('timeframe'))[0];
+    const [analysis] = await journalSessionService.createAnalysisEvents([{
+      sessionId: session.id,
+      timeframeOptionId: timeframe.id,
+      analysisText: 'Test analysis',
+    }]);
+    const trade = await tradeService.createTrade({
+      journalSessionId: session.id,
+      analysisEventId: analysis.id,
+      symbol: 'EURUSD',
+    });
+    const trigger = await journalSessionService.createTriggerEvent({
+      sessionId: session.id,
+      analysisEventId: analysis.id,
+      tradeId: trade.id,
+    });
+    await journalSessionService.saveMedia({
+      sessionId: session.id,
+      analysisId: analysis.id,
+      category: 'analysis',
+      file: new File(['analysis image'], 'analysis.png', { type: 'image/png' }),
+    });
+
+    await journalSessionService.deleteAnalysisEvent(analysis.id);
+
+    expect(await db.journalSessionAnalyses.get(analysis.id)).toBeUndefined();
+    expect(await db.journalMedia.where('analysisId').equals(analysis.id).count()).toBe(0);
+    expect(await db.journalTriggers.get(trigger.id)).toMatchObject({ analysisEventId: null });
+    expect(await db.trades.get(trade.id)).toMatchObject({ analysisEventId: null });
+    expect(await db.trades.get(trade.id)).toBeTruthy();
+  });
+
   it('round-trips session media through replace restore and removes trade media with its trade', async () => {
     const { session } = await seedSession();
     const trade = await tradeService.createTrade({ journalSessionId: session.id, symbol: 'EURUSD' });

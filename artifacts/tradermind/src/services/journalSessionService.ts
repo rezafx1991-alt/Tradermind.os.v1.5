@@ -587,10 +587,7 @@ export const journalSessionService = {
   },
 
   calculateMetrics(trades: Trade[]): JournalSessionMetrics {
-    const settled = trades.filter(trade =>
-      isClosed(trade)
-      && ['win', 'partial-win', 'loss', 'partial-loss', 'breakeven'].includes(trade.result),
-    );
+    const settled = trades.filter(isClosed);
     const wins = settled.filter(isWin).length;
     const losses = settled.filter(isLoss).length;
     const breakeven = settled.filter(isBreakEven).length;
@@ -834,6 +831,9 @@ export const journalSessionService = {
       : undefined;
     if (input.triggerEventId && (!trigger || trigger.sessionId !== input.sessionId)) {
       throw new Error('تریگر انتخاب‌شده متعلق به این سشن نیست یا پیدا نشد.');
+    }
+    if (trigger && (trigger.status !== 'pending' && trigger.status !== 'confirmed' || trigger.tradeId)) {
+      throw new Error('فقط تریگر در انتظار یا تأییدشده و بدون معامله قابل تبدیل است.');
     }
 
     let analysisEventId = input.analysisEventId;

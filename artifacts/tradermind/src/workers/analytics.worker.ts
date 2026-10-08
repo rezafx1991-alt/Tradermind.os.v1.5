@@ -14,6 +14,7 @@ import type { TradingTimeConfig } from '../lib/tradingTime';
 import { computeExpectancy } from '../core/metrics/expectancy';
 import { computeProfitFactor } from '../core/metrics/profitFactor';
 import { computeRiskMetrics } from '../core/metrics/riskMetrics';
+import { computeMaxDrawdown } from '../core/metrics/pnl';
 
 // ── Message Types ─────────────────────────────────────────────────────────────
 
@@ -170,16 +171,10 @@ function computePerformance(trades: Trade[]): PerformanceResult {
     .filter((x): x is { t: Trade; net: number } => x.net !== null)
     .sort((a, b) => getCloseTime(a.t) - getCloseTime(b.t));
 
-  let peak = 0, equity = 0, maxDD = 0, maxDDPct: number | null = null;
+  let equity = 0;
   const pnlCurve: { index: number; cumulative: number }[] = [];
   for (let i = 0; i < closed.length; i++) {
     equity += closed[i].net;
-    if (equity > peak) peak = equity;
-    const dd = peak - equity;
-    if (dd > maxDD) {
-      maxDD = dd;
-      maxDDPct = peak > 0 ? (dd / peak) * 100 : null;
-    }
     pnlCurve.push({ index: i + 1, cumulative: equity });
   }
 
@@ -193,11 +188,12 @@ function computePerformance(trades: Trade[]): PerformanceResult {
 
   const winPnls = closed.map(x => x.net).filter(v => v > 0);
   const lossPnls = closed.map(x => x.net).filter(v => v < 0);
+  const drawdown = computeMaxDrawdown(trades);
 
   return {
     totalPnl: equity,
-    maxDrawdown: maxDD,
-    maxDrawdownPct: maxDDPct,
+    maxDrawdown: drawdown.absolute,
+    maxDrawdownPct: drawdown.percentage,
     avgWin: avg(winPnls),
     avgLoss: avg(lossPnls),
     largestWin: winPnls.length ? winPnls.reduce((m, v) => (v > m ? v : m), winPnls[0]) : null,

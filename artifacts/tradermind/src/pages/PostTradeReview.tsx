@@ -244,13 +244,13 @@ export default function PostTradeReview() {
     }));
   };
 
-  const handleSave = async (generateAI = false) => {
-    if (!trade) return;
+  const handleSave = async (generateAI = false, markComplete = false): Promise<boolean> => {
+    if (!trade) return false;
     setIsSaving(true);
     try {
       const toSave: PostTradeReviewData = {
         ...review,
-        completedAt: review.completedAt || Date.now(),
+        completedAt: markComplete ? (review.completedAt || Date.now()) : (review.completedAt || 0),
       };
       if (generateAI) {
         setIsGenerating(true);
@@ -263,8 +263,10 @@ export default function PostTradeReview() {
       setReview(toSave);
       toast.success('ریویو ذخیره شد');
       if (generateAI) setCurrentStep(9);
+      return true;
     } catch (e) {
       toast.error('خطا در ذخیره');
+      return false;
     } finally {
       setIsSaving(false);
       setIsGenerating(false);
@@ -1358,11 +1360,14 @@ export default function PostTradeReview() {
           )}
           {currentStep === STEPS.length - 1 && (
             <Button
-              onClick={() => setLocation(`/journal/trades/${id}`)}
+              onClick={async () => {
+                if (await handleSave(false, true)) setLocation(`/journal/trades/${id}`);
+              }}
+              disabled={isSaving}
               variant="outline"
               className="flex-1"
             >
-              بازگشت به معامله
+              ذخیره و پایان مرور
             </Button>
           )}
         </div>

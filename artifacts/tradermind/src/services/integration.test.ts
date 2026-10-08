@@ -1,3 +1,5 @@
+// @vitest-environment jsdom
+
 /**
  * Integration Tests — TraderMind
  *

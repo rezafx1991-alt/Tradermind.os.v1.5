@@ -228,12 +228,16 @@ function validateRecord(
 
 // ─── Duplicate detection ──────────────────────────────────────────────────────
 
+type DuplicateCandidate = Pick<Trade, 'symbol' | 'direction' | 'entryPrice' | 'openedAt'> & {
+  id: string | null;
+};
+
 async function detectDuplicate(
   symbol: string,
   direction: 'long' | 'short',
   entryPrice: number,
   openedAt: number | null,
-  existingTrades: Trade[],
+  existingTrades: readonly DuplicateCandidate[],
 ): Promise<{ isDuplicate: boolean; duplicateTradeId: string | null }> {
   for (const t of existingTrades) {
     const sameSymbol = t.symbol.toLowerCase() === symbol.toLowerCase();
@@ -257,6 +261,7 @@ export async function previewCSV(
 ): Promise<ImportPreview> {
   const { headers, rows } = parseCSV(text);
   const existingTrades = await db.trades.toArray();
+  const knownTrades: DuplicateCandidate[] = [...existingTrades];
   const parsedRows: ParsedRecord[] = [];
 
   for (const raw of rows) {
@@ -269,16 +274,22 @@ export async function previewCSV(
     const { errors, warnings } = validateRecord(mapped);
     let isDuplicate = false;
     let duplicateTradeId: string | null = null;
+    let candidateForBatch: DuplicateCandidate | null = null;
     if (!errors.length && mapped.symbol && mapped.direction && mapped.entryPrice) {
       const dir = normaliseDirection(mapped.direction);
       const entry = parseFloat(mapped.entryPrice);
       const ts = mapped.openedAt ? parseTimestamp(mapped.openedAt) : null;
       if (dir) {
-        const dup = await detectDuplicate(mapped.symbol, dir, entry, ts, existingTrades);
+        const symbol = mapped.symbol.trim();
+        const dup = await detectDuplicate(symbol, dir, entry, ts, knownTrades);
         isDuplicate = dup.isDuplicate;
         duplicateTradeId = dup.duplicateTradeId;
+        if (!dup.isDuplicate && ts !== null) {
+          candidateForBatch = { id: null, symbol, direction: dir, entryPrice: entry, openedAt: ts };
+        }
       }
     }
+    if (candidateForBatch) knownTrades.push(candidateForBatch);
     parsedRows.push({ raw, mapped, errors, warnings, isDuplicate, duplicateTradeId });
   }
 
@@ -425,7 +436,7 @@ export async function importJSON(
     return { imported: 0, skipped: 0, errors: ['خطای parse JSON'] };
   }
 
-  const existingTrades = await db.trades.toArray();
+  const existingTrades: DuplicateCandidate[] = [...await db.trades.toArray()];
 
   for (const r of records) {
     const symbol = String(r.symbol ?? '').toUpperCase().trim();
@@ -474,9 +485,16 @@ export async function importJSON(
         tags: r.tags ? (Array.isArray(r.tags) ? JSON.stringify(r.tags) : String(r.tags)) : '[]',
         emotions: r.emotions ? (Array.isArray(r.emotions) ? JSON.stringify(r.emotions) : String(r.emotions)) : '[]',
       };
-      await tradeService.createTrade({
+      const createdTrade = await tradeService.createTrade({
         ...importedTrade,
         ...normalizeImportedTradeFields(importedTrade),
+      });
+      existingTrades.push({
+        id: createdTrade.id,
+        symbol: createdTrade.symbol,
+        direction: createdTrade.direction,
+        entryPrice: createdTrade.entryPrice,
+        openedAt: createdTrade.openedAt,
       });
       imported++;
     } catch (e) {

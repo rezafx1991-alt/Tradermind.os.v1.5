@@ -119,6 +119,39 @@ describe('computeAnalytics — TradeSummary', () => {
     expect(result.summary.wins).toBe(1);
   });
 
+  it('محاسبات مالی را از سود خالص و فقط معاملات بسته با داده معتبر می‌گیرد', () => {
+    const trades = [
+      makeTradeRaw({
+        status: 'closed', result: 'loss', profitLoss: 100, fees: 20,
+        rMultiple: null, riskAmount: 40, closedAt: 1,
+      }),
+      makeTradeRaw({
+        status: 'closed', result: 'win', profitLoss: -50, fees: 5,
+        rMultiple: null, riskAmount: 55, closedAt: 2,
+      }),
+      makeTradeRaw({
+        status: 'closed', result: 'win', profitLoss: 100, fees: 100,
+        rMultiple: null, riskAmount: null, closedAt: 3,
+      }),
+      makeTradeRaw({
+        status: 'closed', result: 'win', profitLoss: null,
+        rMultiple: null, riskAmount: 20, closedAt: 4,
+      }),
+      makeTradeRaw({
+        status: 'open', result: 'open', profitLoss: 1_000,
+        rMultiple: 10, openedAt: 5,
+      }),
+    ];
+
+    const result = computeAnalytics(trades, [], []);
+    expect(result.summary.totalPnl).toBe(25);
+    expect(result.summary.breakeven).toBe(1);
+    expect(result.summary.avgR).toBeCloseTo(0.5, 10);
+    expect(result.summary.bestTrade).toBe(80);
+    expect(result.summary.worstTrade).toBe(-55);
+    expect(result.pnlCurve).toHaveLength(3);
+  });
+
   it('باید winRate را به درستی محاسبه کند', () => {
     const trades = [
       makeTrade({ result: 'win', status: 'closed' }),

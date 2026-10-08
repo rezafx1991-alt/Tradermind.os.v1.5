@@ -89,6 +89,17 @@ describe('PnL، منحنی و Drawdown', () => {
     expect(dd.absolute).toBe(50);
     expect(dd.percentage).toBeCloseTo(50, 8); // نه 50/600
   });
+  it('بیشترین درصد افت را مستقل از بیشترین افت مبلغی پیدا می‌کند', () => {
+    const trades = [
+      t({ profitLoss: 10_000, closedAt: 1 }),
+      t({ profitLoss: -300, closedAt: 2 }),
+      t({ profitLoss: 10_600, closedAt: 3 }),
+      t({ profitLoss: -400, closedAt: 4 }),
+    ];
+    const dd = computeMaxDrawdown(trades);
+    expect(dd.absolute).toBe(400);
+    expect(dd.percentage).toBeCloseTo(3, 8);
+  });
   it('با موجودی اولیه، درصد نسبت به سرمایه محاسبه می‌شود', () => {
     const dd = computeMaxDrawdown([t({ profitLoss: -100, closedAt: 1 })], 1000);
     expect(dd.absolute).toBe(100);

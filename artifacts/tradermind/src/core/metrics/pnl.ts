@@ -86,9 +86,10 @@ export function computeMaxDrawdown(
     equity += net;
     if (equity > peak) peak = equity;
     const dd = peak - equity;
-    if (dd > maxDD) {
-      maxDD = dd;
-      maxDDPct = peak > 0 ? (dd / peak) * 100 : null;
+    if (dd > maxDD) maxDD = dd;
+    if (dd > 0 && peak > 0) {
+      const ddPct = (dd / peak) * 100;
+      if (maxDDPct === null || ddPct > maxDDPct) maxDDPct = ddPct;
     }
   }
 
