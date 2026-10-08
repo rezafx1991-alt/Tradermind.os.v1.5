@@ -19,7 +19,9 @@
     "target": [
       {
         "target": "nsis",
-        "arch": ["x64"]
+        "arch": [
+          "x64"
+        ]
       }
     ],
     "icon": "public/icon.png",
@@ -36,7 +38,13 @@
   },
   "mac": {
     "target": [
-      { "target": "dmg", "arch": ["x64", "arm64"] }
+      {
+        "target": "dmg",
+        "arch": [
+          "x64",
+          "arm64"
+        ]
+      }
     ],
     "icon": "public/icon.png",
     "category": "public.app-category.finance"
